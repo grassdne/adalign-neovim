@@ -8,13 +8,13 @@ This started as a quick user command in my config but I've since improved upon i
 
 Adalign uses the new Neovim 0.8 user command preview functionality to support previews (like :s and /). I recommend Neovim >=0.8.1 (or nightly).
 
-## Installation
+### Installation
 Packer example:
 ```lua
     use 'grassdne/adalign-neovim'
 ```
 
-## Usage
+### Usage
 ```vim
 :help adalign-neovim
 ```
