@@ -1,0 +1,68 @@
+==============================================================================
+INTRODUCTION                                                  *adalign-neovim*
+
+Align lines with whitespace based on vim regexp.
+For awesome preview functionality, Adalign needs Neovim 0.8+. Specifically
+0.8.1+ is recommended due to a prior Neovim bug that could result in a crash
+while previewing.
+
+------------------------------------------------------------------------------
+Align                                                                 *:Align*
+
+:[range]Align[!] {pattern}
+
+Inserts spaces in lines in [range] so that the start columns of {pattern}
+match align. Non-empty lines that do not match {pattern} raise an error unless
+bang (!) is present, in which case lines that fail to match are ignored.
+
+SIMPLE EXAMPLE:
+Visual selecting the following content:
+>c
+    Vector2 vec_Sum(Vector2 a, Vector2 b) { return VECOP(a, +, b); }
+    Vector2 vec_Scale(Vector2 v, Vector2 f) { return VECOP(v, *, f); }
+    Vector2 vec_Mult(Vector2 v, float f) { return VECOP(v, *, f); }
+    Vector2 vec_Div(Vector2 v, float f) { return VECOP(v, /, f); }
+    Vector2 vec_Add(Vector2 v, float f) { return VECOP(v, +, f); }
+<
+Then,
+>vim
+    :Align {
+<
+Yields:
+>c
+    Vector2 vec_Sum(Vector2 a, Vector2 b)   { return VECOP(a, +, b); }
+    Vector2 vec_Scale(Vector2 v, Vector2 f) { return VECOP(v, *, f); }
+    Vector2 vec_Mult(Vector2 v, float f)    { return VECOP(v, *, f); }
+    Vector2 vec_Div(Vector2 v, float f)     { return VECOP(v, /, f); }
+    Vector2 vec_Add(Vector2 v, float f)     { return VECOP(v, +, f); }
+<
+
+REMARK:
+You may use the |/\zs| regex atom to easily control the start position of the match.
+
+------------------------------------------------------------------------------
+Unalign                                                             *:Unalign*
+
+:[range]Unalign
+
+Unalign does not necessarily undo an :Align command, and accepts no pattern.
+It's a trivial command that simply replaces spaces that are in a row with a single
+space (ignoring indentation).
+
+SIMPLE EXAMPLE:
+Visual selecting the following content:
+>python3
+    x             = 1
+    y             = 2
+    long_variable = 3
+<
+Then,
+>vim
+    :Unlign
+<
+Yields:
+>python3
+    x = 1
+    y = 2
+    long_variable = 3
+<
