@@ -1,6 +1,15 @@
+print "bar"
 local api = vim.api
 
-local adalign = require "adalign"
+if vim.g.loaded_adalign ~= nil then return end
+vim.g.loaded_adalign = 1
+
+api.nvim_set_hl(0, "AdalignInsertSpace",  { link = "Substitute", default = true })
+api.nvim_set_hl(0, "AdalignMatch",        { link = "Search",     default = true })
+api.nvim_set_hl(0, "AdalignLeadingMatch", { link = "IncSearch",  default = true })
+api.nvim_set_hl(0, "AdalignDeleteSpace",  { link = "Substitute", default = true })
+
+local adalign = require "adalign.util"
 
 local function on_align_command(ctx)
     local startline = ctx.line1 - 1 --to 0-based index
@@ -46,7 +55,7 @@ local function align_preview(ctx, preview_ns, preview_buf)
                 api.nvim_buf_add_highlight(
                     buffer,
                     preview_ns,
-                    'Substitute',
+                    'AdalignInsertSpace',
                     startline + i-1,
                     inserts[i].start-1,
                     inserts[i].start-1 + #inserts[i].text
@@ -60,7 +69,7 @@ local function align_preview(ctx, preview_ns, preview_buf)
                 api.nvim_buf_add_highlight(
                     buffer,
                     preview_ns,
-                    is_leading and 'IncSearch' or 'Search',
+                    is_leading and 'AdalignLeadingMatch' or 'AdalignMatch',
                     startline + i-1,
                     -- matches indices don't take into account new inserts
                     matches.indices[i] + chars_inserted,
@@ -88,7 +97,7 @@ local function unalign_preview(ctx, preview_ns, preview_buf)
 
     for i, l in ipairs(lines) do
         for start_idx, end_idx in l:gmatch("%S()  +()") do
-            api.nvim_buf_add_highlight(buffer, preview_ns, 'Substitute', startline + i-1, start_idx-1, end_idx-1)
+            api.nvim_buf_add_highlight(buffer, preview_ns, 'AdalignDeleteSpace', startline + i-1, start_idx-1, end_idx-1)
         end
     end
     return 1

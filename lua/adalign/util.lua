@@ -1,3 +1,5 @@
+-- Pure functions
+
 local strdisplaywidth = vim.fn.strdisplaywidth
 local M = {}
 
