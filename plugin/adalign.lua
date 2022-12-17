@@ -1,4 +1,3 @@
-print "bar"
 local api = vim.api
 
 if vim.g.loaded_adalign ~= nil then return end
