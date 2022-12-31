@@ -9,11 +9,10 @@ while previewing.
 ------------------------------------------------------------------------------
 Align                                                                 *:Align*
 
-:[range]Align[!] {pattern}
+:[range]Align {pattern}
 
 Inserts spaces in lines in [range] so that the start columns of {pattern}
-match align. Non-empty lines that do not match {pattern} raise an error unless
-bang (!) is present, in which case lines that fail to match are ignored.
+match align. Lines that fail to match {pattern} are ignored.
 
 SIMPLE EXAMPLE:
 Visual selecting the following content:
@@ -46,8 +45,8 @@ Unalign                                                             *:Unalign*
 :[range]Unalign
 
 Unalign does not necessarily undo an :Align command, and accepts no pattern.
-It's a trivial command that simply replaces spaces that are in a row with a single
-space (ignoring indentation).
+It's a trivial command that simply replaces any sequence of consecutive spaces in
+each line excluding indentation with a single space.
 
 SIMPLE EXAMPLE:
 Visual selecting the following content:
@@ -58,7 +57,7 @@ Visual selecting the following content:
 <
 Then,
 >vim
-    :Unlign
+    :Unalign
 <
 Yields:
 >python3

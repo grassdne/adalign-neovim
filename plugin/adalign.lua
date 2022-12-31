@@ -17,14 +17,10 @@ local function on_align_command(ctx)
     -- lines must exist if it's a valid range, right?
     local lines = assert(api.nvim_buf_get_lines(buffer, startline, ctx.line2, false))
 
-    local matches, err = adalign.get_matches(lines, ctx.args, ctx.bang)
+
+    local matches, err = adalign.get_matches(lines, ctx.args)
     if not matches then
-        if err.type == "BAD_REGEX" then
-            print(err.msg)
-        elseif err.type == "BAD_LINE" then
-            print(string.format('Line (number %d) failed to match given regular expression `%s` (use ! to ignore)', err.line_idx+startline, ctx.args))
-        end
-        return
+        return api.nvim_err_writeln(err)
     end
     local inserts = adalign.get_inserts(lines, matches)
     local new_lines = adalign.apply_inserts(lines, inserts)
@@ -38,7 +34,7 @@ local function align_preview(ctx, preview_ns, preview_buf)
     -- lines must exist if it's a valid range, right?
     local lines = assert(api.nvim_buf_get_lines(buffer, startline, ctx.line2, false))
 
-    local matches, error_index = adalign.get_matches(lines, ctx.args, ctx.bang)
+    local matches, err = adalign.get_matches(lines, ctx.args)
     if matches then
         local inserts = adalign.get_inserts(lines, matches)
         local new_lines = adalign.apply_inserts(lines, inserts)
@@ -110,6 +106,6 @@ local function on_unalign_command(ctx)
 end
 
 api.nvim_create_user_command("Align", on_align_command, {
-    bang = true, range = 1, nargs = 1, preview = align_preview,
+    range = 1, nargs = 1, preview = align_preview,
 })
 api.nvim_create_user_command("Unalign", on_unalign_command, {range = 1, preview = unalign_preview})

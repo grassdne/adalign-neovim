@@ -3,9 +3,9 @@
 local strdisplaywidth = vim.fn.strdisplaywidth
 local M = {}
 
-function M.get_matches(lines, pattern, ignorebadlines)
+function M.get_matches(lines, pattern)
     local ok, re = pcall(vim.regex, pattern)
-    if not ok then return nil, { type="BAD_REGEX", msg=re } end
+    if not ok then return false, re end
 
     -- we need the indices of the matches to know where to split the string
     local match_indices = {}
@@ -19,10 +19,6 @@ function M.get_matches(lines, pattern, ignorebadlines)
         match_indices[i], end_indices[i] = re:match_str(lines[i])
         if match_indices[i] then
             match_columns[i] = strdisplaywidth(lines[i]:sub(1, match_indices[i]))
-
-        -- ignore lines that don't match if they're empty or `ignorebadlines` is set
-        elseif not ignorebadlines and lines[i] ~= "" then
-            return nil, { type="BAD_LINE", line_idx=i }
         end
     end
 
